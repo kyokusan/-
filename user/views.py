@@ -1,28 +1,39 @@
+import hashlib
+
 from django.http import HttpResponse
 from django.shortcuts import render
 
 # Create your views here.
-from user.forms import UserformModel
+from user import set_password
+from user.forms import UserformModel, User_formModel
+from user.models import User
 
 
 def login(request):
-    return render(request,"login.html")
-def reg(request):
+    if request.method=="GET":
+        return render(request,"login.html")
+    else:
+        data=request.POST
+        form=User_formModel(data)#验证合法性
+        if form.is_valid():
+            return HttpResponse("o")
+        else:
+            context={"errors":form.errors}
+            return render(request,"login.html",context=context)
+def reg(request):#注册页面
     if request.method=="GET":
         return render(request,"reg.html")
     else:
-        data=request.POST
-        form=UserformModel(data)
+        data=request.POST#得到提交的数据
+        form=UserformModel(data)#验证合法性
         if form.is_valid():
-            pass
+            cleaned_data=form.cleaned_data#清洗数据
+            user=User()#连接数据库User
+            user.tel=cleaned_data.get("tel")#获得清洗后的数据
+            user.password=set_password(cleaned_data.get("password"))
+            user.save()
+            return render(request,"login.html")
         else:
             context={"errors":form.errors}
             return render(request,"reg.html",context=context)
 
-        # data=request.POST
-        # form=UserformModel(data)
-        # if form.is_valid():
-        #     return HttpResponse("OK")
-        # else:
-        #     context={"errors":form.errors}
-        #     return request(request,"reg.html",context=context)
