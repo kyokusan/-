@@ -28,7 +28,7 @@
 	    		<a href="step.html" class="step"><img src="/static/images/step.png" width="26"/></a>
 	    	</div>
 	    	<div class="mem-pic">
-		    	<div class="mem-pic-bg" style="background-image: url(images/memtx.png);"></div>
+		    	<div class="mem-pic-bg" style="background-image: url(/static/images/one.jpg);"></div>
 	    	</div>
 	    	<ul class="member-menu">
 			<li>
@@ -74,7 +74,7 @@
 		  		<span>帐户与安全</span>
 		  	</div>
 		    <ul class="user-nav">
-		    	<li><a href="infor.html"> <img src="/static/images/1-icon4.png"> <p>个人资料</p></a></li>
+		    	<li><a href="{% url "user:infor" %}"> <img src="/static/images/1-icon4.png"> <p>个人资料</p></a></li>
 		    	<li><a href="gladdress.html"> <img src="/static/images/1-icon5.png"> <p>收货地址</p></a></li>
 		    	<li><a href="saftystep.html"> <img src="/static/images/1-icon6.png"> <p>安全设置</p></a></li>
 		    	<li><a href="money.html"> <img src="/static/images/1-icon7.png"> <p>我的钱包</p></a></li>

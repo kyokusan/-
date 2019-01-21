@@ -27,37 +27,52 @@
             </h1>
 	    </header>
 	    <div style="height: 49px;"></div>
-	    <ul class="safty1">
+
+        <ul class="safty1">
 	    	<li>
 {#	    		<a href="">#}
 	    			<i style="margin-top: 25px;">头像</i>
 	    			<div class="infor-pic">
-	    				<img src="/static/images/infortx.png" />
+	    				<img src="/static/images/one.jpg" />
 	    			</div>
 {#	    		</a>#}
 	    	</li>
+            </ul>
+        <form action="" method="post">
+            {% csrf_token %}
+        <ul class="safty1">
 	    	<li>
 {#	    		<a href="">#}
 	    			<i>昵称</i>
-	    			<input class="infor-tele" placeholder="默契"/>	    			
+	    			<input name="name" value="{{ data.name }}" class="infor-tele" />
+                 <p class="text-danger">{{ errors.name.0 }}</p>
 {#	    		</a>#}
 	    	</li>
 	    	<li>
 	    		<a href="">
 	    			<i>性别</i>
 	    			<i class="infor-tele">
-	    				<label class="am-radio-inline">
-				          <input type="radio" name="radio10" checked="checked" value="1" data-am-ucheck>男
+                        <label class="am-radio-inline">
+                        {% if data.sex == 1 %}
+                            <input type="radio" name="sex" checked="checked" value="1" data-am-ucheck>男
+                        {% else %}
+                            <input type="radio" name="sex"  value="1" data-am-ucheck>男
+                        {% endif %}
 				        </label>
 				        <label class="am-radio-inline">
-				          <input type="radio" name="radio10" value="1" data-am-ucheck>女
+                            {% if data.sex == 2 %}
+                                <input type="radio" name="sex" checked="checked" value="2" data-am-ucheck>女
+                            {% else %}
+                                <input type="radio" name="sex"  value="2" data-am-ucheck>女
+                            {% endif %}
 				        </label>
 	    			</i>
 	    		</a>
 	    	</li><li>
 {#	    		<a href="">#}
 	    			<i>生日</i>
-                    <input class="infor-tele" placeholder="出生日期"/>
+                    <input name="birth" type="date" value="{{ data.birth }}" class="infor-tele"/>
+             <p class="text-danger">{{ errors.birth.0 }}</p>
 {#	    		</a>#}
 	    	</li>
 	    </ul>
@@ -65,21 +80,26 @@
 	     <ul class="safty1">
 	    	<li>
 	    			<i>学校</i>
-	    			<input class="infor-tele" placeholder="就读于哪个学校"/>	    			
+	    			<input name="school" class="infor-tele" value="{{ data.school }}" />
+                 <p class="text-danger">{{ errors.school }}</p>
 	    	</li>
 	    	<li>
 	    			<i>位置</i>
-	    			<input class="infor-tele" placeholder="详细地址"/>	    			
+	    			<input name="location" class="infor-tele" value="{{ data.location }}" />
+                 <p class="text-danger">{{ errors.location.0 }}</p>
 	    	</li>
 	    	<li>
 	    			<i>故乡</i>
-                    <input class="infor-tele" placeholder="来自哪里"/>
+                    <input name="home" value="{{data.home}}" class="infor-tele" />
+                 <p class="text-danger">{{ errors.home.0 }}</p>
 	    	</li>
 	    	<li>
 	    			<i>手机</i>
-                    <input class="infor-tele" placeholder="填写你的手机号码"/>
+                    <input  class="infor-tele" value="{{data.tel }}"/>
 	    	</li>
 	    </ul>
+        <button type="submit" value="提交">提交</button>
+            </form>
 	    <script src="{% static "js/jquery.min.js" %}"></script>
         <script src="{% static "js/amazeui.min.js" %}"></script>
 	</body>
