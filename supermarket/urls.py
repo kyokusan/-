@@ -22,4 +22,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^super/', views.super),
     url(r'^user/', include("user.urls",namespace="user")),
+    url(r'^goods/', include("goods.urls",namespace="goods")),
+# 上传部件自动调用的上传地址
+    url(r'^ckeditor/', include("ckeditor_uploader.urls")),
 ]

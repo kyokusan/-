@@ -1,6 +1,6 @@
 from django.conf.urls import url
 
-from user.views import login, reg, infor, member, forgetpassword
+from user.views import login, reg, infor, member, forgetpassword, SendMsm
 
 urlpatterns = [
     url(r'^login/',login,name="login"),
@@ -8,5 +8,7 @@ urlpatterns = [
     url(r'^infor/',infor,name="infor"),
     url(r'^member/',member,name="member"),
     url(r'^forgetpassword/',forgetpassword,name="forgetpassword"),
+    url(r'^sendMsg/$',SendMsm.as_view(),name="发送信息"),
+
 
 ]

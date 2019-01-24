@@ -15,5 +15,6 @@ class User(models.Model):#定义表单
     create_time=models.DateField(auto_now_add=True)
     update_time=models.DateField(auto_now=True)
     location=models.CharField(max_length=50,null=True)
+    head = models.ImageField(upload_to='shop/%Y%m/%d', default='head/memtx.png', verbose_name='用户头像')
     class Meta:#更名
         db_table="User"

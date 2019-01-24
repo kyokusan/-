@@ -14,7 +14,7 @@
 		<link href="{% static "css/amazeui.min.css" %}" rel="stylesheet" type="text/css" />
 		<link href="{% static "css/style.css" %}" rel="stylesheet" type="text/css" />
 		<script src="{% static "js/jquery-1.10.2.min.js" %}"></script>
-		<script src="{% static "js/popup.mini.js" %}j"></script>
+		<script src="{% static "js/popup.mini.js" %}"></script>
 	</head>
 	<body style="background: #f6f6f6;">
 		<header data-am-widget="header" class="am-header am-header-default sq-head ">
@@ -24,11 +24,11 @@
 	    </header>
 	    <div style="height: 49px;"></div>
 	    <div class="member">
-	    	<div class="mem-tit">15078921546 
-	    		<a href="step.html" class="step"><img src="/static/images/step.png" width="26"/></a>
+	    	<div class="mem-tit">{{ request.session.tel }}
+	    		<a href="step.html" class="step"><img src="{% static "images/step.png" %}" width="26"/></a>
 	    	</div>
 	    	<div class="mem-pic">
-		    	<div class="mem-pic-bg" style="background-image: url(/static/images/one.jpg);"></div>
+		    	<div class="mem-pic-bg" style="background-image: url({{ MEDIA_URL }}{{ request.session.head }});"></div>
 	    	</div>
 	    	<ul class="member-menu">
 			<li>
@@ -171,7 +171,7 @@
  <div data-am-widget="navbar" class="am-navbar am-cf am-navbar-default sq-foot am-no-layout" id="">
       <ul class="am-navbar-nav am-cf am-avg-sm-5">   
           <li>
-            <a href="index.html" class="">
+            <a href="{% url "goods:index" %}" class="">
                 <span class="am-icon-home"></span>
                 <span class="am-navbar-label">首页</span>
             </a>
