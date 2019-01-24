@@ -41,8 +41,12 @@
 <!--图片轮换-->
 <div class="am-slider am-slider-default" data-am-flexslider id="demo-slider-0">
   <ul class="am-slides">
-    <li><img src="/static/images/banner.png" /></li>
-    <li><img src="/static/images/banner.png" /></li>
+      {% for img in adv %}
+      <li><img src="{{ MEDIA_URL }}{{ img.img_url }}" /></li>
+      {% endfor %}
+
+{#    <li><img src="/static/images/banner.png" /></li>#}
+{#    <li><img src="/static/images/banner.png" /></li>#}
   </ul>
 </div>
 <!--导航-->
@@ -91,7 +95,7 @@
       </li>
       <li>
         <div class="am-gallery-item">
-            <a href="{% url "goods:商品类别" %}" class="">
+            <a href="{% url "goods:商品类别" %} " class="">
               <img src="/static/images/icon5.png" />
               <p>超市</p>
             </a>

@@ -6,6 +6,7 @@ or_sale=((False,"下架"),(True,"上架"))
 class Category(models.Model):#商品分类表
     cata_name=models.CharField(max_length=20,verbose_name="分类名称")
     brief=models.TextField(max_length=200,verbose_name="简介",null=True)
+    order=models.SmallIntegerField(default=0,verbose_name="排序")
     add_time=models.DateField(auto_now_add=True,verbose_name="添加时间")
     update_time=models.DateField(auto_now=True,verbose_name="更新时间")
     is_delete=models.BooleanField(default=True,verbose_name="是否删除")

@@ -3,13 +3,14 @@ from django.shortcuts import render
 # Create your views here.
 from django.views import View
 
-from goods.models import Goods_Sku, Goods_Spu
+from goods.models import Goods_Sku, Goods_Spu, Category, Advertisement
 
 
 def index(request):#商城主页
     if request.method=="GET":
         data=Goods_Sku.objects.filter(is_delete=False)
-        context={"data":data}
+        adv=Advertisement.objects.filter(is_delete=False)
+        context={"data":data,"adv":adv}
         return render(request,"index.html",context=context)
 
 def detail(request,id):
@@ -18,7 +19,23 @@ def detail(request,id):
     context={"Sku":Sku}
     return render(request,"detail.html",context=context)
 
-def category(request):#商品类别
+def category(request,cate_id):#商品类别
     if request.method=="GET":
-        return render(request,"category.html")
+        data=Category.objects.filter(is_delete=False).order_by("order")
+        if cate_id=="":
+            datas=data.first()#第一个类，如果是cata_id没有传值
+            cate_id=datas.pk
+        else:#如果有参数
+            cate_id=int(cate_id)
+            datas=Category.objects.filter(pk=cate_id)
+        Sku=Goods_Sku.objects.filter(is_delete=False,category=datas)
+        #
+        # if order =="":
+        #     order=0
+        # order = int(order)
+        #
+        # oder_rule=["pk","-sales_volume","price","-price","-add_time"]
+        # Sku=Sku.order_by(oder_rule=[order])
+        context={"data":data,"Sku":Sku,"cate_id":cate_id}
+        return render(request,"category.html",context=context)
 
