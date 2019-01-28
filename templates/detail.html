@@ -61,7 +61,7 @@
         	<h4>数量：</h4>
             <div class="d-stock">
               <a class="decrease">-</a>
-                <input id="num" readonly="" class="text_box" name="" type="text" value="1">
+                <input sku_id="{{ Sku.pk }}" id="num" readonly="" class="text_box" name="" type="text" value="{{ cart_count }}">
                 <input id="id" type="hidden" value="644">
                 <a class="increase">+</a>
                <span id="dprice" class="price" style="display:none"> 36</span>
@@ -134,7 +134,7 @@
 		<!--底部-->
  <div style=" height: 55px;"></div>
  <ul class="fix-shopping">
- 	<li><a href="shopcart.html" class="join">加入购物车</a></li>
+ 	<li><a href="{% url "Cart:购物车" %}" class="join">加入购物车</a></li>
  	<li><a href="tureorder.html" class="imm-buy">立即购买</a></li>
  </ul>
  
@@ -144,9 +144,48 @@
 		$('.increase').click(function(){
 			var self = $(this);
 			var current_num = parseInt(self.siblings('input').val());
-			current_num += 1;
+			{#Ajax操作开始#}
+            var sku_id = self.siblings('input').attr('sku_id');
+            var data = {
+                'csrfmiddlewaretoken':'{{ csrf_token }}',
+                'count':1,
+                'sku_id':sku_id
+
+            };
+            $.ajax({
+                type:"post",
+                url:"{% url 'Cart:添加' %}",
+                data:data,
+                dataType:"json",
+                success:function (data) {
+                    if (data.code == 0){
+                        //添加成功
+                        current_num += 1;
+			if(current_num > 0){
+				self.siblings(".decrease").fadeIn();
+				self.siblings(".text_box").fadeIn();
+			}
 			self.siblings('input').val(current_num);
-			update_item(self.siblings('input').data('item-id'));
+			//修改总数量
+                        $("#cart_count").text(data.data)
+                    }else if(data.code == 1){
+                        //未登录,跳转登录页面
+                        if(confirm("没有登录，是否继续")){
+                        location.href = "{% url "user:login" %}"
+                        }
+
+                    }else {
+                        alert(data.errmsg);
+                    }
+                }
+
+            });
+
+
+
+			{% comment %}current_num += 1;
+			self.siblings('input').val(current_num);
+			update_item(self.siblings('input').data('item-id'));{% endcomment %}
 		})		
 		$('.decrease').click(function(){
 			var self = $(this);
