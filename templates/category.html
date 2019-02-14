@@ -24,6 +24,12 @@
     overflow: hidden;
     white-space: normal;
     text-overflow: ellipsis;}
+
+            .list-price {
+    background: url({% if order == 2 %}{% static "images/order-bot.png" %}{% elif order == 3 %}{% static "images/order-top.png" %}{% else %}{% static "images/order.png" %}{% endif %}) no-repeat right center;
+    padding-right: 20px;
+    font-style: normal;
+}
 		</style>
 	</head>
 	<body>
@@ -40,10 +46,10 @@
 	    </header>
 	    <div style="height: 49px;"></div>
 	    <ul class="list-nav">
-	    	<li class="current"><a href="">综合</a></li>
-	    	<li><a href="">销量</a></li>
-            <li><a href=""><i class="list-price">价格</i></a></li>
-	    	<li><a href="">新品</a></li>
+	    	<li {% if order == 0 %}class="current"{% endif %}><a href="{% url "goods:商品类别" cate_id 0 %}">综合</a></li>
+	    	<li {% if order == 1 %}class="current"{% endif %}><a href="{% url "goods:商品类别" cate_id 1 %}">销量</a></li>
+            <li {% if order == 2 or order == 3 %}class="current"{% endif %}><a id="price" href="{% url "goods:商品类别" cate_id 2 %}"><i  class="list-price">价格</i></a></li>
+	    	<li {% if order == 4 %}class="current"{% endif %}><a href="{% url "goods:商品类别" cate_id 4 %}">新品</a></li>
 	    </ul>
 	    <div class="content-list">
 	    	<div class="list-left">
@@ -52,7 +58,7 @@
                 	<li {% if x.pk == cate_id %}
                 	class="current"
                 	{% endif %}>
-                        <a href="{% url "goods:商品类别" x.pk%}">{{ x.cata_name }}</a></li>
+                        <a href="{% url "goods:商品类别" x.pk order %}">{{ x.cata_name }}</a></li>
                 {% endfor %}
 
 {#	    		<li><a href="">进口特产</a></li>#}
@@ -77,7 +83,7 @@
                 <div class="list-cart">
                 <div class="d-stock ">
 		                <a class="decrease">-</a>
-		                <input id="num" readonly="" class="text_box" name="" type="text" value="0">
+		                <input sku_id="{{ x.pk }}" id="num" readonly="" class="text_box" name="" type="text" value="0">
 		                <a class="increase">+</a>
                 </div>
                 </div>
@@ -85,7 +91,7 @@
 	    	</li>
                         {% empty %}
                         <li>
-                        <a href="{% url "goods:商品类别" "" %}">商品丢失了</a>
+                        <a href="{% url "goods:商品类别" "" "" %}">商品丢失了</a>
                         </li>
                     {% endfor %}
 
@@ -98,9 +104,9 @@
 	    <!--底部-->
  <div style="height: 55px;"></div>
  <div class="fix-bot">
-	   	  <div class="fix-bot-cart"><i>8</i></div>
-	   	  <a href="tureorder.html" class="list-js">去结算</a>
-	   	  <a href="tureorder.html" class="list-jsk">一键快购</a>
+	   	  <div class="fix-bot-cart"><i id="cart_count">{{ cart_count }}</i></div>
+	   	  <a href="{% url "order:确认订单" %}" class="list-js">去结算</a>
+	   	  <a href="{% url "Cart:购物车" %}" class="list-jsk">一键快购</a>
 	   	  <!--<div class="js-text">
             	<p><b>￥217.80</b></p>
             	<p class="js-car">购物满50元免运费</p>
@@ -114,35 +120,116 @@
  
 <script src="{% static "js/jquery.min.js" %}"></script>
 <script src="{% static "js/amazeui.min.js" %}"></script>
+
 <script>
 //购物数量加减
 $(function(){
 		$('.increase').click(function(){
 			var self = $(this);
 			var current_num = parseInt(self.siblings('input').val());
-			current_num += 1;
+			{#Ajax操作开始#}
+            var sku_id = self.siblings('input').attr('sku_id');
+            var data = {
+                'csrfmiddlewaretoken':'{{ csrf_token }}',
+                'count':1,
+                'sku_id':sku_id
+
+            };
+            $.ajax({
+                type:"post",
+                url:"{% url 'Cart:添加' %}",
+                data:data,
+                dataType:"json",
+                success:function (data) {
+                    if (data.code == 0){
+                        //添加成功
+                        alert("成功")
+                        current_num += 1;
 			if(current_num > 0){
 				self.siblings(".decrease").fadeIn();
 				self.siblings(".text_box").fadeIn();
 			}
 			self.siblings('input').val(current_num);
-			update_item(self.siblings('input').data('item-id'));
-		})		
+			//修改总数量
+                        $("#cart_count").text(data.data)
+                    }else if(data.code == 1){
+                        //未登录,跳转登录页面
+                        if(confirm("没有登录，是否继续")){
+                        location.href = "{% url "user:login" %}"
+                        }
+
+                    }else {
+                        alert(data.errmsg);
+                    }
+                }
+                
+            });
+
+
+
+
+		})
 		$('.decrease').click(function(){
 			var self = $(this);
 			var current_num = parseInt(self.siblings('input').val());
-			if(current_num > 0){
+			{#Ajax操作开始#}
+            var sku_id = self.siblings('input').attr('sku_id');
+            var data = {
+                'csrfmiddlewaretoken':'{{ csrf_token }}',
+                'count':-1,
+                'sku_id':sku_id
+
+            };
+            $.ajax({
+                type:"post",
+                url:"{% url 'Cart:减少' %}",
+                data:data,
+                dataType:"json",
+                success:function (data) {
+                  if (data.code == 0){
+                      //删除成功
+                      if(current_num > 0){
 				current_num -= 1;
                 if(current_num < 1){
 	                self.fadeOut();
 					self.siblings(".text_box").fadeOut();
                 }
 				self.siblings('input').val(current_num);
-				update_item(self.siblings('input').data('item-id'));
-			}
+                // 修改数量
+                          $("#cart_count").text(data.data);
+			}else if (data.code == 1){
+                          //未登录，跳转登录
+                          if(confirm("没有登录，是否立即登录")){
+                            location.href = "{% url 'user:login' %}"
+                          }
+
+                      }else {
+                          alert(data.errmsg);
+                      }
+                  }
+                }
+
+            });
+
+
+			{% comment %}if(current_num > 0){
+				current_num -= 1;
+                if(current_num < 1){
+	                self.fadeOut();
+					self.siblings(".text_box").fadeOut();
+                }
+				self.siblings('input').val(current_num);
+
+			}{% endcomment %}
 		})
 	})
-
+      $(function () {
+          {%  if order == 2 %}
+              $("#price").attr('href','{% url "goods:商品类别" cate_id 3 %}');
+              {% elif order == 3 %}
+              $("#price").attr('href','{% url "goods:商品类别" cate_id 2 %}');
+          {% endif %}
+      })
 </script>
 	</body>
 </html>

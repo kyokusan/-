@@ -20,9 +20,13 @@ from supermarket import views
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    # 全文搜索框架
+    url(r'^search/', include('haystack.urls',namespace="search")),
     url(r'^super/', views.super),
     url(r'^user/', include("user.urls",namespace="user")),
+    url(r'^cart/', include("shopCart.urls",namespace="Cart")),
     url(r'^goods/', include("goods.urls",namespace="goods")),
+    url(r'^order/', include("order.urls",namespace="order")),
 # 上传部件自动调用的上传地址
     url(r'^ckeditor/', include("ckeditor_uploader.urls")),
 ]

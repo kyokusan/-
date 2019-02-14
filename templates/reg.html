@@ -41,7 +41,7 @@
 	    <input type="password" name="repassword" value="{{ request.POST.repassword }}" placeholder="确认密码" class="login-name">
             <p class="text-danger">{{ errors.repassword.0 }}</p>
 	    <div class="yzm" style="margin-top: 1.5rem;">
-	    	<input type="text" name="captcha" class="reg-yzm" placeholder="输入验证码" />
+	    	<input type="text" name="captcha" class="reg-yzm" placeholder="输入验证码" style=" width: 100px" />
 	    	<input type="button" class="yzm-hq" value="获取验证码" />
 	    </div>
             {{ errors.captcha.0 }}

@@ -7,9 +7,10 @@ from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
 
+from shopCart.helpler import json_msg
 from user import set_password
-from user.forms import UserformModel, User_formModel, InforFormModel, ForgetPassword
-from user.models import User
+from user.forms import UserformModel, User_formModel, InforFormModel, ForgetPassword, AddressAddForm
+from user.models import User, UserAddress
 import re
 from django_redis import get_redis_connection
 # ——————登录  与  注册  与  忘记密码——————————————————————————————————————————
@@ -165,4 +166,28 @@ class SendMsm(View):
       #合成响应
         return JsonResponse({"error":0})
 
+def address(request):
+    """收货地址添加"""
+    if request.method=="GET":
+        return render(request,"address.html")
+    else:
+        data = request.POST.dict()#强制转换成字典
+        #字典保存用户
+        data["user_id"] = request.session.get("id")#FORM自动转换功能
+        #验证参数
+        form = AddressAddForm(data)
+        if form.is_valid():
+            form.instance.user=User.objects.get(pk=data['user_id'])
+            form.save()
+            return JsonResponse(json_msg(0,'添加成功'))
+        else:
+            return JsonResponse(json_msg(1,'添加失败',data=form.errors))
 
+
+def gladdress(request):
+    """收货地址列表"""
+    if request.method=="GET":
+        user_id=request.session.get("id")
+        data=UserAddress.objects.filter(user_id=user_id,is_delete=False).order_by("-isDefault")
+        context={"addresses":data}
+        return render(request,"gladdress.html",context=context)

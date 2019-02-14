@@ -27,7 +27,7 @@
 		   </div>
 			<h1 class="am-header-title1">
 		        <div class="search-box">
-		           <a href="village.html" class="index-search">啦啦啦啦</a>
+		           <a href="{% url "search:haystack_search" %}" class="index-search">啦啦啦啦</a>
 		         <!--  <input type="submit" value="" class="search-icon" /> -->
 		        </div>
 		    </h1>
@@ -95,7 +95,7 @@
       </li>
       <li>
         <div class="am-gallery-item">
-            <a href="{% url "goods:商品类别" %} " class="">
+            <a href="{% url "goods:商品类别" "" "" %} " class="">
               <img src="/static/images/icon5.png" />
               <p>超市</p>
             </a>
@@ -169,20 +169,20 @@
             </a>
           </li>
           <li>
-            <a href="shopcart.html" class="">
+            <a href="{% url "Cart:购物车" %}" class="">
                 <span class="am-icon-shopping-cart"></span>
                 <span class="am-navbar-label">购物车</span>
             </a>
           </li>
           <li>
-            <a href="allorder.html" class="">
+            <a href="{% url "order:订单" %}" class="">
                 <span class="am-icon-file-text"></span>
                 <span class="am-navbar-label">订单</span>
             </a>
           </li>
 
           <li>
-            <a href="member.html" class="">
+            <a href="{% url "user:member" %}" class="">
                 <span class="am-icon-user"></span>
                 <span class="am-navbar-label">我的</span>
             </a>
